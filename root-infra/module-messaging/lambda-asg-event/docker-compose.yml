@@ -1,0 +1,16 @@
+version: '3.2'
+
+services:
+  localstack:
+    image: localstack/localstack
+    ports:
+      - "4567-4582:4567-4582"
+      - "8080:8080"
+    environment:
+      - SERVICES=cloudwatch
+      # - DEBUG=${DEBUG- }
+      # - DATA_DIR=${DATA_DIR- }
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      # - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"

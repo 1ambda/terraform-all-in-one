@@ -1,0 +1,3 @@
+localstack
+awscli
+aws-sam-cli
