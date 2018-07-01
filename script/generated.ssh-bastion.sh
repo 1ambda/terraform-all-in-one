@@ -53,7 +53,7 @@ fi
 
 if [ "${OPT_KUBE}" == "true" ]; then
   echo -e "${TAG} Displaying Kubernetes Nodes"
-  kubectl config use-context kops.${project}.${company}.k8s.local
+  kubectl config use-context kops.1ambda.github.k8s.local
   echo -e "	(kubernetes)"
   kubectl get nodes
   echo -e ""

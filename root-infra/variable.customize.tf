@@ -19,12 +19,6 @@ variable "environment" {
   default = "DEV"
 }
 
-# AWS
-variable "aws_account_number" {
-  # aws account number
-  default = "767540458184"
-}
-
 variable "region" {
   default = "ap-northeast-2"
 }

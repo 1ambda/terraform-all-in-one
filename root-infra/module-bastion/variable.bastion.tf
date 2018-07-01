@@ -23,3 +23,5 @@ variable "whitelist_targets" {
 variable "whitelist_enabled" {}
 
 variable "iam_policy_ec2_cloudwatch_arn" {}
+
+variable "kops_cluster_name" {}

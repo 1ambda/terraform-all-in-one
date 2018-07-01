@@ -9,6 +9,7 @@ data "template_file" "ssh-bastion" {
     bastion_host = "${aws_instance.bastion.public_ip}"
     bastion_user = "${var.bastion_user}"
     ssh_private_key_path = "${var.ssh_private_key_path}"
+    kops_cluster_name = "${var.kops_cluster_name}"
 
     region = "${var.region}"
     project = "${lower(var.project)}"
