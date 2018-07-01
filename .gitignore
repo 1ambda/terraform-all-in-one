@@ -1,5 +1,14 @@
 # root-infra
 
+# root-kubernetes
+root-kubernetes/data/
+root-kubernetes/kubernetes.tf
+root-kubernetes/generated.*.tf
+root-kubernetes/generated.*.sh
+root-kubernetes/generated.*.yaml
+root-kubernetes/addon-ingress/generated.*.sh
+root-kubernetes/module-ZEPL/generated.*
+
 # terraform
 .terraform
 terraform.tfstate

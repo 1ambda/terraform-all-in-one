@@ -1,58 +1,41 @@
+## ECS
 
-## ECS Setup
-
-variable "ecs_instance_type" {
-  default = "t2.large"
-}
-variable "ecs_host_root_disk_size" {
-  default = "120"
-}
-variable "ecs_container_total_disk_size" {
-  default = "300"
-}
-variable "ecs_container_per_disk_size" {
-  default = "15"
+locals {
+  ecs_instance_type = "t2.large"
+  ecs_host_root_disk_size = "120"
+  ecs_container_total_disk_size = "300"
+  ecs_container_per_disk_size = "15"
 }
 
-## Clustering Setup
+## Storage
 
-variable "zookeeper_clustering" {
-  default = true
-}
-variable "zookeeper_instance_type" {
-  default = "t2.medium"
-}
+locals {
+  zookeeper_clustering = true
+  zookeeper_instance_type = "t2.medium"
 
-variable "ec_clustering" {
-  default = false
-}
-variable "ec_instance_type" {
-  default = "cache.m3.medium"
-}
+  ec_clustering = false
+  ec_instance_type = "cache.m3.medium"
 
-variable "es_clustering" {
-  default = false
-}
-variable "es_node_instance_type" {
-  default = "t2.small.elasticsearch"
-}
-variable "es_node_disk_size" {
-  default = 35
-}
-variable "es_master_instance_type" {
-  default = "t2.small.elasticsearch"
+  es_clustering = false
+  es_node_instance_type = "t2.small.elasticsearch"
+  es_node_disk_size = 35
+  es_master_instance_type = "t2.small.elasticsearch"
+
+  rds_clustering = false
+  rds_instance_type = "db.t2.medium"
+  rds_disk_size = 50
 }
 
-variable "rds_clustering" {
-  default = false
-}
-variable "rds_instance_type" {
-  default = "db.t2.medium"
-}
-variable "rds_disk_size" {
-  default = 50
-}
+# Kubernetes
 
-
-
+locals {
+  kube_master_instance_count = 1
+  kube_master_instance_type = "m4.large"
+  kube_master_root_volume_size = 160
+  kube_worker_instance_count = 2
+  kube_worker_instance_type = "r4.large"
+  kube_worker_root_volume_size = 128
+  kops_ami = "kope.io/k8s-1.9-debian-jessie-amd64-hvm-ebs-2018-03-11"
+  kube_version = "1.9.6"
+}
 

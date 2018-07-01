@@ -1,10 +1,10 @@
-## DEBUG, META
+# DEBUG
 variable "on_testing" {
   # set `false` if you want to setup production deployment
   default = true
 }
 
-## META
+# META
 variable "company" {
   # company name
   default = "GITHUB"
@@ -32,9 +32,10 @@ variable "availability_zones" {
 
 # Domain, SSL (AWS ACM)
 locals {
-  domain_name = "${var.project}.${var.company}.io"
+  domain_name = "${lower(var.project)}.${lower(var.company)}.io"
+  local_acm_validation_method = "EMAIL" # or `DNS`
   external_acm_use = false # set true if you want to use an ACM already existing
-  external_acm_arn = "arn" # set external ACM AAN if you want to use an ACM already existing
+  external_acm_arn = "arn" # set external ACM arn if you want to use an ACM already existing
 }
 
 # Domain (ACM)

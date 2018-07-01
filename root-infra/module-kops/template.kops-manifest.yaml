@@ -1,0 +1,257 @@
+apiVersion: kops/v1alpha2
+kind: Cluster
+metadata:
+  creationTimestamp: 2018-06-10T17:36:43Z
+  name: ${kops_cluster_name}
+spec:
+  api:
+    loadBalancer:
+      type: Public
+  authorization:
+    rbac: {}
+  channel: stable
+  cloudProvider: aws
+  configBase: s3://io.${company}.${project}.infra.kops-secret/${kops_cluster_name}
+  etcdClusters:
+  - etcdMembers:
+    - instanceGroup: master-${vpc_az1}
+      name: a
+    name: main
+  - etcdMembers:
+    - instanceGroup: master-${vpc_az1}
+      name: a
+    name: events
+  iam:
+    allowContainerRegistry: true
+    legacy: false
+  kubelet:
+    kubeletCgroups: /systemd/system.slice
+    runtimeCgroups: /systemd/system.slice
+  kubernetesVersion: ${kube_version}
+  masterInternalName: api.internal.${kops_cluster_name}
+  masterKubelet:
+    kubeletCgroups: /systemd/system.slice
+    runtimeCgroups: /systemd/system.slice
+  masterPublicName: api.${kops_cluster_name}
+  networkCIDR: ${vpc_cidr}
+  networkID: ${vpc_id}
+  networking:
+    weave:
+      mtu: 8912
+  nonMasqueradeCIDR: 100.64.0.0/10
+${sshAccessBlock}
+${kubernetesApiAccess}
+  subnets:
+  - cidr: ${private_subnet_cidr1}
+    id: ${private_subnet_id1}
+    name: ${vpc_az1}
+    type: Private
+    zone: ${vpc_az1}
+  - cidr: ${private_subnet_cidr2}
+    id: ${private_subnet_id2}
+    name: ${vpc_az2}
+    type: Private
+    zone: ${vpc_az2}
+  - cidr: ${public_subnet_cidr1}
+    id: ${public_subnet_id1}
+    name: utility_${vpc_az1}
+    type: Utility
+    zone: ${vpc_az1}
+  - cidr: ${public_subnet_cidr2}
+    id: ${public_subnet_id2}
+    name: utility-${vpc_az2}
+    type: Utility
+    zone: ${vpc_az2}
+  topology:
+    dns:
+      type: Public
+    masters: private
+    nodes: private
+
+---
+apiVersion: kops/v1alpha2
+kind: InstanceGroup
+metadata:
+  creationTimestamp: 2018-06-10T17:36:43Z
+  labels:
+    kops.k8s.io/cluster: ${kops_cluster_name}
+  name: master-${vpc_az1}
+spec:
+  additionalUserData:
+  - content: |
+      #!/bin/sh
+      # installing monitoring agent dependencies for disk, memory
+      apt-get update -y
+      apt-get install -y unzip
+      apt-get install -y libwww-perl libdatetime-perl
+      # installing monitoring agent for disk, memory
+      cd /root
+      curl https://aws-cloudwatch.s3.amazonaws.com/downloads/CloudWatchMonitoringScripts-1.2.2.zip -O
+      unzip CloudWatchMonitoringScripts-1.2.2.zip
+      crontab -l | { cat; echo "*/1 * * * * /root/aws-scripts-mon/mon-put-instance-data.pl --mem-util --mem-avail --disk-path=/ --disk-space-util --disk-space-avail --memory-units=megabytes --disk-space-units=gigabytes --from-cron"; } | crontab -
+      # to debug cron event: tail -F /var/log/syslog | grep CRON
+    name: installAWSCustomMetricMonitoringAgent.sh
+    type: text/x-shellscript
+  - content: |
+      #!/bin/bash
+
+      # install requirements
+      apt-get update -y
+      apt-get install -y jq
+
+      # download agent and dependencies
+      cd /root
+      curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O
+      curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/AgentDependencies.tar.gz -O
+      tar xvf AgentDependencies.tar.gz -C .
+
+      instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+
+      cat <<EOF > ./awslogs.conf
+      [general]
+      state_file = /var/awslogs/state/agent-state
+
+      [/var/log/daemon.log]
+      file = /var/log/daemon.log
+      log_group_name = /masters.${kops_cluster_name}/var/log/daemon.log
+      log_stream_name = $${instance_id}
+
+      [/var/log/etcd.log]
+      file = /var/log/etcd.log
+      log_group_name = /masters.${kops_cluster_name}/var/log/etcd.log
+      log_stream_name = $${instance_id}
+
+      [/var/log/etcd-events.log]
+      file = /var/log/etcd-events.log
+      log_group_name = /masters.${kops_cluster_name}/var/log/etcd-events.log
+      log_stream_name = $${instance_id}
+
+      [/var/log/kube-proxy.log]
+      file = /var/log/kube-proxy.log
+      log_group_name = /masters.${kops_cluster_name}/var/log/kube-proxy.log
+      log_stream_name = $${instance_id}
+
+      [/var/log/kube-apiserver.log]
+      file = /var/log/kube-apiserver.log
+      log_group_name = /masters.${kops_cluster_name}/var/log/kube-apiserver.log
+      log_stream_name = $${instance_id}
+
+      [/var/log/kube-apiserver-audit.log]
+      file = /var/log/kube-apiserver-audit.log
+      log_group_name = /masters.${kops_cluster_name}/var/log/kube-apiserver-audit.log
+      log_stream_name = $${instance_id}
+
+      [/var/log/kube-controller-manager.log]
+      file = /var/log/kube-controller-manager.log
+      log_group_name = /masters.${kops_cluster_name}/var/log/kube-controller-manager.log
+      log_stream_name = $${instance_id}
+
+      [/var/log/kube-scheduler.log]
+      file = /var/log/kube-scheduler.log
+      log_group_name = /masters.${kops_cluster_name}/var/log/kube-scheduler.log
+      log_stream_name = $${instance_id}
+      EOF
+
+      python ./awslogs-agent-setup.py --non-interactive --configfile ./awslogs.conf --region ${region} --dependency-path /root/AgentDependencies
+    name: installAwslogsAgentForMaster
+    type: text/x-shellscript
+  - content: |
+      #!/bin/bash
+
+      # https://github.com/kubernetes/kops/blob/master/nodeup/pkg/model/logrotate.go
+      cat <<EOF > /etc/logrotate.d/kube-apiserver-audit
+      /var/log/kube-apiserver-audit.log {
+        rotate 5
+        copytruncate
+        missingok
+        notifempty
+        delaycompress
+        maxsize 100M
+        daily
+        create 0644 root root
+      }
+      EOF
+    name: logrotateKubeMaster.sh
+    type: text/x-shellscript
+  associatePublicIp: false
+  image: ${kops_ami}
+  machineType: ${master_instance_type}
+  maxSize: ${master_instance_count}
+  minSize: ${master_instance_count}
+  nodeLabels:
+    kops.k8s.io/instancegroup: master-${vpc_az1}
+  role: Master
+  rootVolumeSize: ${master_root_volume_size}
+  subnets:
+  - ${vpc_az1}
+
+---
+
+apiVersion: kops/v1alpha2
+kind: InstanceGroup
+metadata:
+  creationTimestamp: 2018-06-10T17:36:44Z
+  labels:
+    kops.k8s.io/cluster: ${kops_cluster_name}
+  name: nodes
+spec:
+  additionalUserData:
+  - content: |
+      #!/bin/sh
+      # installing monitoring agent dependencies for disk, memory
+      apt-get update -y
+      apt-get install -y unzip
+      apt-get install -y libwww-perl libdatetime-perl
+      # installing monitoring agent for disk, memory
+      cd /root
+      curl https://aws-cloudwatch.s3.amazonaws.com/downloads/CloudWatchMonitoringScripts-1.2.2.zip -O
+      unzip CloudWatchMonitoringScripts-1.2.2.zip
+      crontab -l | { cat; echo "*/1 * * * * /root/aws-scripts-mon/mon-put-instance-data.pl --mem-util --mem-avail --disk-path=/ --disk-space-util --disk-space-avail --memory-units=megabytes --disk-space-units=gigabytes --from-cron"; } | crontab -
+      # to debug cron event: tail -F /var/log/syslog | grep CRON
+    name: installAWSCustomMetricMonitoringAgent.sh
+    type: text/x-shellscript
+  - content: |
+      #!/bin/bash
+
+      # install requirements
+      apt-get update -y
+      apt-get install -y jq
+
+      # download agent and dependencies
+      cd /root
+      curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O
+      curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/AgentDependencies.tar.gz -O
+      tar xvf AgentDependencies.tar.gz -C .
+
+      instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+
+      cat <<EOF > ./awslogs.conf
+      [general]
+      state_file = /var/awslogs/state/agent-state
+
+      [/var/log/kube-proxy.log]
+      file = /var/log/kube-proxy.log
+      log_group_name = /nodes.${kops_cluster_name}/var/log/kube-proxy.log
+      log_stream_name = $${instance_id}
+
+      [/var/log/daemon.log]
+      file = /var/log/daemon.log
+      log_group_name = /nodes.${kops_cluster_name}/var/log/daemon.log
+      log_stream_name = $${instance_id}
+      EOF
+
+      python ./awslogs-agent-setup.py --non-interactive --configfile ./awslogs.conf --region ${region} --dependency-path /root/AgentDependencies
+    name: installAwslogsAgentForWorkers
+    type: text/x-shellscript
+  associatePublicIp: false
+  image: ${kops_ami}
+  machineType: ${worker_instance_type}
+  maxSize: ${worker_instance_count}
+  minSize: ${worker_instance_count}
+  nodeLabels:
+    beta.kubernetes.io/fluentd-ds-ready: "true"
+  role: Node
+  rootVolumeSize: ${worker_root_volume_size}
+  subnets:
+  - ${vpc_az1}
+  - ${vpc_az2}
