@@ -1,12 +1,34 @@
 # terraform-all-in-one
 
-Provide fine-grained Kubernetes + Infrastructure Terraform files for AWS
+Provide fine-grained Kubernetes + Infrastructure Terraform files for AWS :)
 
-## Requirement
+## Usage
 
 ```bash
 COMPANY=GITHUB PROJECT=1ambda EMAIL=1ambda@github.com ./create-ssh-key.sh
 ```
+
+- [x] `root-infra`: Create VPC, Bastion, ECS, Stroages and build kops scripts
+    ```bash
+    cd root-infra
+
+    # build infra using terraform
+    terraform apply -var 'rds_username={USERNAME}' -var 'rds_password={PASSWORD}'
+
+    # provision non-managed stroages using ansible
+    ../script-provision/generated.provision-zookeeper.sh
+    ```
+- [x] `root-kubernetes`: Build kubernetes cluster and install add-ons
+    ```bash
+    cd root-kubernetes
+
+    # generate kops files
+    $(cat generated.kops-env.sh);
+    ./generated.kops-create.sh;
+
+    # build kubernetes cluster
+    terraform apply
+    ```
 
 ## Features
 
@@ -16,7 +38,7 @@ COMPANY=GITHUB PROJECT=1ambda EMAIL=1ambda@github.com ./create-ssh-key.sh
     * Configurable whitelist
     * SSH Connection, Proxy Utilities
 - ECS
-    * ASG Policies
+    * ASG Scaling Policies
     * Cloudwatch Log Groups for ECS related logs
     * Cloudwatch Custom Metrics + Alerts for ECS: Logical Volume
     * Customized Container Volume Size
@@ -35,4 +57,9 @@ COMPANY=GITHUB PROJECT=1ambda EMAIL=1ambda@github.com ./create-ssh-key.sh
     * ELB-backed health check
 - Kubernetes Cluster
     * Terraform Intergrated Kubernetes Cluster by kops
+
+## Credits
+
+- [terraform-aws-vpc](https://github.com/terraform-aws-modules/terraform-aws-vpc)
+- [terraform-sns-slack](https://github.com/builtinnya/aws-sns-slack-terraform)
 

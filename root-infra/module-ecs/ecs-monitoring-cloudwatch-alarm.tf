@@ -19,7 +19,7 @@ resource "aws_cloudwatch_metric_alarm" "ecs-alert_High-CPUReservation" {
     ClusterName = "${aws_ecs_cluster.interpreter.name}"
   }
 
-  actions_enabled = "${var.on_testing ? false : true}"
+  actions_enabled = true
   insufficient_data_actions = []
   ok_actions = []
   alarm_actions = [

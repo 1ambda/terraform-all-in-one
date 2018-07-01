@@ -1,0 +1,4 @@
+	(storage-baremetal)
+rds-maridadb	github-1ambda-mariadb.czwjsypgwtzh.ap-northeast-2.rds.amazonaws.com:3306
+elasticsearch	vpc-github-1ambda-3wtobteror2jw3hfwz4lizuviq.ap-northeast-2.es.amazonaws.com:9200 (HTTP :80)
+elasticache		github-1ambda.uuwlos.ng.0001.apn2.cache.amazonaws.com:6379
