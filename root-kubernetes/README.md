@@ -62,9 +62,9 @@ kops rolling-update cluster  --cloudonly --force --yes
 
 ## 2. Deploying add-ons
 
-- [x] 2.1 ACM + Nginx Ingress + installed by Helm Tiller
-- [x] 2.2 Dashboard + Heapster
-- [x] 2.3 EFK + ES Curator
+- [x] [2.1 ACM + Nginx Ingress + installed by Helm Tiller](https://github.com/1ambda/terraform-all-in-one/tree/master/root-kubernetes#21-acm--nginx-ingress)
+- [x] [2.2 Dashboard + Heapster]()
+- [x] [2.3 EFK + ES Curator]()
 
 ### 2.1 ACM + Nginx Ingress
 
@@ -96,7 +96,7 @@ To get the exposed ELB DNS name,
 kubectl get service --namespace default global-entry-nginx-ingress-controller -o json | jq -r '.status.loadBalancer.ingress[0].hostname'
 ```
 
-### 2.2 (optional) Kubernetes Dashboard
+### 2.2 Kubernetes Dashboard
 
 ```bash
 kubectl apply -f addon-dashboard/heapster-influx-v1.3.3.yaml -f addon-dashboard/heapster-v1.4.2.yaml
@@ -110,7 +110,7 @@ stern --since 10m -n kube-system -l k8s-app=heapster
 
 - [Kubernetes Dashboard URL](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/node?namespace=kube-system)
 
-### 2.3 (optional) EKF + ES Curator
+### 2.3 EKF + ES Curator
 
 ```bash
 kubectl apply -f addon-EFK/es-statefulset.yaml
