@@ -1,0 +1,17 @@
+---
+- hosts: zookeeper_instances
+  remote_user: ${storage_user}
+  roles:
+    # https://github.com/weldpua2008/ansible-openjdk
+    - role: weldpua2008.openjdk
+      openjdk_version: 8
+
+    # https://github.com/AnsibleShipyard/ansible-zookeeper
+    - role: AnsibleShipyard.ansible-zookeeper
+      zookeeper_version: ${zookeeper_version}
+      zookeeper_url: "${download_url_zookeeper}"
+      zookeeper_hosts: "{{groups[\"zookeeper_instances\"]}}"
+      zookeeper_env:
+        ZOO_LOG_DIR: "/var/log/zookeeper"
+        ZOO_LOG4J_PROP: "INFO,ROLLINGFILE"
+

@@ -93,3 +93,28 @@ module "module-ecs" {
   slack_webhook_url_alert = "${local.slack_webhook_url_alert}"
   slack_webhook_channel_alert = "${local.slack_webhook_channel_alert}"
 }
+
+module "module-storage-baremetal" {
+  source = "module-storage-baremetal"
+
+  region = "${var.region}"
+  company = "${var.company}"
+  project = "${var.project}"
+  environment = "${var.environment}"
+  on_testing = "${var.on_testing}"
+  sns_topic_cloudwatch_alarm_arn = "${module.module-messaging.sns_topic_arn_cloudwatch_alarm}"
+
+  # network
+  vpc_id = "${module.module-vpc.vpc_id}"
+  private_subnet_ids = "${module.module-vpc.private_subnet_ids}"
+  availability_zones = "${var.availability_zones}"
+  bastion_security_group_id = "${module.module-bastion.bastion_security_group_id}"
+  bastion_public_ip = "${module.module-bastion.bastion_public_ip}"
+
+  aws_key_pair_name = "${module.module-bastion.aws_key_pair_name}"
+  ssh_private_key_path = "${local.ssh_private_key_path}"
+  iam_policy_ec2_cloudwatch_arn = "${module.module-iam.iam_policy_ec2_cloudwatch_arn}"
+
+  zookeeper_clustering = "${var.zookeeper_clustering}"
+  zookeeper_instance_type = "${var.zookeeper_instance_type}"
+}

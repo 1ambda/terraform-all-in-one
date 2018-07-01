@@ -1,6 +1,6 @@
 # terraform-all-in-one
 
-Provide (semi) Production-ready Kubernetes + Infrastructure on AWS
+Provide fine-grained Kubernetes + Infrastructure Terraform files for AWS
 
 ## Requirement
 
@@ -35,5 +35,4 @@ COMPANY=GITHUB PROJECT=1ambda EMAIL=1ambda@github.com ./create-ssh-key.sh
     * ELB-backed health check
 - Kubernetes Cluster
     * Terraform Intergrated Kubernetes Cluster by kops
-
 

@@ -2,7 +2,7 @@
 ## ECS Setup
 
 variable "ecs_instance_type" {
-  default = "r4.xlarge"
+  default = "t2.large"
 }
 variable "ecs_host_root_disk_size" {
   default = "120"
@@ -17,7 +17,7 @@ variable "ecs_container_per_disk_size" {
 ## Clustering Setup
 
 variable "zookeeper_clustering" {
-  default = false
+  default = true
 }
 variable "zookeeper_instance_type" {
   default = "t2.medium"

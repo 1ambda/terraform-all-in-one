@@ -2,6 +2,10 @@ variable "bastion_user" {
   default = "ec2-user" # Amazon Linux AMI
 }
 
+locals {
+  ssh_script_path = "${path.root}/../script-ssh/generated.ssh-bastion.sh"
+}
+
 data "template_file" "ssh-bastion" {
   template = "${file("${path.root}/../template/template.ssh-bastion.sh")}"
 
@@ -25,8 +29,8 @@ resource "null_resource" "template-ssh-bastion" {
 
   provisioner "local-exec" {
     command = <<EOT
-    echo '${data.template_file.ssh-bastion.rendered}' > ${path.root}/../script/generated.ssh-bastion.sh
-    chmod +x ${path.root}/../script/generated.ssh-bastion.sh
+    echo '${data.template_file.ssh-bastion.rendered}' > ${local.ssh_script_path}
+    chmod +x ${local.ssh_script_path}
 EOT
   }
 }
