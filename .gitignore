@@ -11,8 +11,10 @@ root-kubernetes/module-ZEPL/generated.*
 
 # terraform
 .terraform
+.terraform.tfstate.*
 terraform.tfstate
 terraform.tfstate.backup
+
 
 *.zip
 

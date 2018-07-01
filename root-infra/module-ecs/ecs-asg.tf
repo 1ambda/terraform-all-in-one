@@ -12,8 +12,8 @@ variable "ecs_image_minimum_cleanup_age" {}
 
 locals {
   instance_name = "ecs.${lower(var.project)}.${lower(var.company)}.io"
-  asg_tf_resource_name = "ASG-${var.company}-${var.project}_ecs"
-  cluster_name = "${var.company}-${var.project}_ecs"
+  asg_tf_resource_name = "ASG-${var.company}-${var.project}_ECS"
+  cluster_name = "${var.company}-${var.project}_ECS"
 }
 
 output ecs_instance_name {

@@ -150,12 +150,8 @@ resource "null_resource" "template_kubernetes_kops_delete_cluster" {
 
     echo '#!/bin/bash' > ${local.path_module_kubernetes}/generated.kops-delete.sh
     echo '' >> ${local.path_module_kubernetes}/generated.kops-delete.sh
-    echo 'kubectl config delete-context kops.bank.kakao.enterprise.zepl.k8s.local' >> ${local.path_module_kubernetes}/generated.kops-delete.sh
-    echo 'kubectl config delete-cluster kops.bank.kakao.enterprise.zepl.k8s.local' >> ${local.path_module_kubernetes}/generated.kops-delete.sh
-
-    echo 'aws s3 rm --recursive s3://io.${lower(var.company)}.${lower(var.project)}.infra.kops-secret/' >> ${local.path_module_kubernetes}/generated.kops-delete.sh
-    echo "versions=\$(aws s3api list-object-versions --bucket io.${lower(var.company)}.${lower(var.project)}.infra.kops-secret | jq '{Objects: [.Versions[] | {Key:.Key, VersionId : .VersionId}], Quiet: false}')" >> ${local.path_module_kubernetes}/generated.kops-delete.sh
-    echo 'aws s3api delete-objects --bucket io.enterprise.${lower(var.company)}.${lower(var.project)}.infra.kops-secret --delete $versions' >> ${local.path_module_kubernetes}/generated.kops-delete.sh
+    echo 'kubectl config delete-context kops.${lower(var.project)}.${lower(var.company)}.k8s.local' >> ${local.path_module_kubernetes}/generated.kops-delete.sh
+    echo 'kubectl config delete-cluster kops.${lower(var.project)}.${lower(var.company)}.k8s.local' >> ${local.path_module_kubernetes}/generated.kops-delete.sh
 
     chmod +x ${local.path_module_kubernetes}/generated.kops-delete.sh
 EOT

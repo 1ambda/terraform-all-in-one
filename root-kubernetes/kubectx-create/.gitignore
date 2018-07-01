@@ -1,0 +1,5 @@
+*.csr
+*.crt
+*.pem
+*register.sh
+*.zip

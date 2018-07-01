@@ -16,7 +16,7 @@ resource "aws_cloudwatch_metric_alarm" "ecs-alert_High-CPUReservation" {
   metric_name = "CPUReservation"
   namespace = "AWS/ECS"
   dimensions = {
-    ClusterName = "${aws_ecs_cluster.interpreter.name}"
+    ClusterName = "${aws_ecs_cluster.container.name}"
   }
 
   actions_enabled = true
@@ -42,7 +42,7 @@ resource "aws_cloudwatch_metric_alarm" "ecs-alert_Low-CPUReservation" {
   metric_name = "CPUReservation"
   namespace = "AWS/ECS"
   dimensions = {
-    ClusterName = "${aws_ecs_cluster.interpreter.name}"
+    ClusterName = "${aws_ecs_cluster.container.name}"
   }
 
   actions_enabled = true
@@ -69,7 +69,7 @@ resource "aws_cloudwatch_metric_alarm" "ecs-alert_High-MemReservation" {
   metric_name = "MemoryReservation"
   namespace = "AWS/ECS"
   dimensions = {
-    ClusterName = "${aws_ecs_cluster.interpreter.name}"
+    ClusterName = "${aws_ecs_cluster.container.name}"
   }
 
   actions_enabled = true
@@ -96,7 +96,7 @@ resource "aws_cloudwatch_metric_alarm" "ecs-alert_Low-MemReservation" {
   metric_name = "MemoryReservation"
   namespace = "AWS/ECS"
   dimensions = {
-    ClusterName = "${aws_ecs_cluster.interpreter.name}"
+    ClusterName = "${aws_ecs_cluster.container.name}"
   }
 
   actions_enabled = true

@@ -30,7 +30,7 @@ kubectl get nodes
 #### Problem: No such host when `kubectl`
 
 ```bash
-Unable to connect to the server: dial tcp: lookup api.kops.bank.kakao.enterprise.zepl.k8s.local on 8.8.8.8:53: no such host
+Unable to connect to the server: dial tcp: lookup api.kops.project.company.k8s.local on 8.8.8.8:53: no such host
 
 kops export kubecfg --name=$NAME
 ```
@@ -41,9 +41,9 @@ If you hit SSL issues like this, Please refer [this ticket](https://github.com/k
 
 ```bash
 $ kops validate cluster
-Validating cluster kops.PROJECT.ENTERPRISE.enterprise.zepl.k8s.local
+Validating cluster kops.PROJECT.COMPANY.k8s.local
 
-unexpected error during validation: error listing nodes: Get https://api-kops-XXX.ap-northeast-1.elb.amazonaws.com/api/v1/nodes: x509: certificate is valid for api.internal.kops.porject.company.enterprise.zepl.k8s.local, api.kops.project.company.enterprise.zepl.k8s.local, kubernetes, kubernetes.default, kubernetes.default.svc, kubernetes.default.svc.cluster.local, not api-kops-project-company--oakbcb-247697005.ap-northeast-1.elb.amazonaws.com
+unexpected error during validation: error listing nodes: Get https://api-kops-XXX.ap-northeast-1.elb.amazonaws.com/api/v1/nodes: x509: certificate is valid for api.internal.kops.project.company.k8s.local, api.kops.project.company.k8s.local, kubernetes, kubernetes.default, kubernetes.default.svc, kubernetes.default.svc.cluster.local, not api-kops-project-company--oakbcb-247697005.ap-northeast-1.elb.amazonaws.com
 ```
 
 Then, try to execute `./generated.correct-kubectl-context.sh`
@@ -60,24 +60,13 @@ terraform apply
 kops rolling-update cluster  --cloudonly --force --yes
 ```
 
-## 2. Deploying add-ons + Creating kubectl context for a deployer
+## 2. Deploying add-ons
 
-- [x] 2.1 Creating kubectl context
-- [x] 2.2 ACM + Nginx Ingress + installed by Helm Tiller
-- [x] 2.3 Creating Programming Access Key for ECS accessible IAM
-- [x] 2.4 Creating docker-registry
-- [x] 2.5 (optional) Dashboard + Heapster
-- [x] 2.6 (optional) EFK + ES Curator
+- [x] 2.1 ACM + Nginx Ingress + installed by Helm Tiller
+- [x] 2.2 Dashboard + Heapster
+- [x] 2.3 EFK + ES Curator
 
-### 2.1 Creating kubectl context
-
-Move to the `kubectx-create/` dir and follow instruction of the README.md file there
-
-```bash
-cd kubectx-create/
-```
-
-### 2.2 ACM + Nginx Ingress
+### 2.1 ACM + Nginx Ingress
 
 To instal [helm](https://helm.sh/), Please follow these instructions below.
 
@@ -107,18 +96,7 @@ To get the exposed ELB DNS name,
 kubectl get service --namespace default global-entry-nginx-ingress-controller -o json | jq -r '.status.loadBalancer.ingress[0].hostname'
 ```
 
-### 2.3 Creating Programming Access Key for ECS accessible IAM
-Please using AWS management console - IAM user
-
-### 2.4 Creating docker-registry
-
-```bash
-# make sure that you exported `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
-export IAM={username} AWS_ACCESS_KEY_ID={access-key} AWS_SECRET_ACCESS_KEY={secret-key} 
-./generated.docker-registry.sh
-```
-
-### 2.5 (optional) Kubernetes Dashboard
+### 2.2 (optional) Kubernetes Dashboard
 
 ```bash
 kubectl apply -f addon-dashboard/heapster-influx-v1.3.3.yaml -f addon-dashboard/heapster-v1.4.2.yaml
@@ -132,7 +110,7 @@ stern --since 10m -n kube-system -l k8s-app=heapster
 
 - [Kubernetes Dashboard URL](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/node?namespace=kube-system)
 
-### 2.6 (optional) EKF + ES Curator
+### 2.3 (optional) EKF + ES Curator
 
 ```bash
 kubectl apply -f addon-EFK/es-statefulset.yaml

@@ -1,5 +1,5 @@
 variable "instance_purpose" {
-  default = "Interpreter"
+  default = "Container"
 }
 
 data "aws_ami" "ecs" {

@@ -16,7 +16,7 @@ resource "aws_cloudwatch_event_rule" "ecs_event_instance" {
   ],
   "detail": {
     "clusterArn": [
-      "${aws_ecs_cluster.interpreter.arn}"
+      "${aws_ecs_cluster.container.arn}"
     ]
   }
 }
@@ -70,7 +70,7 @@ resource "aws_lambda_function" "handler_ecs_event_instance_availability" {
       SLACK_WEBHOOK_CHANNEL = "${var.slack_webhook_channel_alert}"
       SLACK_WEBHOOK_BOT_NAME = "AWS ECS Event (Instance Availability)"
       SLACK_WEBHOOK_BOT_EMOJI = ":this_is_fine:"
-      ECS_CLUSTER_NAME = "${aws_ecs_cluster.interpreter.name}"
+      ECS_CLUSTER_NAME = "${aws_ecs_cluster.container.name}"
       CURRENT_AWS_REGION = "${var.region}"
       META_COMPANY = "${var.company}"
       META_PROJECT = "${var.project}"

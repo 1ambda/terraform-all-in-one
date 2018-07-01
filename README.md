@@ -2,10 +2,26 @@
 
 Provide fine-grained Kubernetes + Infrastructure Terraform files for AWS 🚀
 
-## Usage
+## Prerequisite
+
+- [ansible](https://github.com/ansible/ansible)
+- [jq](https://github.com/stedolan/jq)
+- [terraform](https://github.com/hashicorp/terraform)
+- [kops](https://github.com/kubernetes/kops)
+- [awscli](https://docs.aws.amazon.com/cli/latest/userguide/installing.html)
 
 ```bash
-COMPANY=GITHUB PROJECT=1ambda EMAIL=1ambda@github.com ./create-ssh-key.sh
+$ brew install ansible jq terraform kops
+$ pip install awscli
+```
+
+## Usage
+
+Before applying terraform files, need to create a ssh key pair.
+
+```bash
+# modify values for `COMPANY`,`PROJECT`, and `EMAIL`
+$ COMPANY=GITHUB PROJECT=1ambda EMAIL=1ambda@github.com ./create-ssh-key.sh
 ```
 
 - [x] **root-infra**: Create VPC, Bastion, ECS, Stroages and build kops scripts
@@ -31,9 +47,10 @@ COMPANY=GITHUB PROJECT=1ambda EMAIL=1ambda@github.com ./create-ssh-key.sh
     terraform init
     terraform apply
 
-    # wait few minitues, then validate the created cluster
+    # wait for few minitues until Kube API ELB is ready (`api-kops-*`)
+    # then validate the created cluster
     kops export kubecfg --name=$NAME
-    generated.correct-kubectl-context.sh
+    ./generated.correct-kubectl-context.sh
 
     kops validate cluster
     kubectl get pods
@@ -64,9 +81,9 @@ COMPANY=GITHUB PROJECT=1ambda EMAIL=1ambda@github.com ./create-ssh-key.sh
     * Cloudwatch Log Groups for ZK logs
     * Cloudwatch Custom Metrics + Alerts for EC2: Memory, Disk Space
     * ELB-backed health check
-- Kubernetes Cluster
-    * Terraform Intergrated Kubernetes Cluster by kops
-    * add-on: Nginx Ingerss Chart
+- Kubernetes Cluster (Single Master)
+    * Terraform Intergrated Kubernetes Cluster Creation using kops
+    * add-on: Nginx Ingerss Chart with AWS ACM
     * add-on: Elasticsearch, Kibana, Fluentd
     * add-on: Kubernetes Dashboard
 
