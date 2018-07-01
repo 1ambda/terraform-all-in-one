@@ -1,6 +1,13 @@
 # terraform-all-in-one
 
-Provide fine-grained Kubernetes + Infrastructure Terraform files for AWS 🚀
+Provide fine-grained Kubernetes + Infrastructure Terraform files for AWS in 30 mins 🚀
+
+- [Prerequisite](#prerequisite)
+- [Usage](#usage)
+- [Features](#features)
+- [Credits](#credits)
+
+<br/>
 
 ## Prerequisite
 
@@ -11,11 +18,11 @@ Provide fine-grained Kubernetes + Infrastructure Terraform files for AWS 🚀
 - [awscli](https://docs.aws.amazon.com/cli/latest/userguide/installing.html)
 
 ```bash
-$ brew install ansible jq terraform kops
+$ brew install ansible jq terraform kops watch
 $ pip install awscli
 
-$ git clone git@github.com:1ambda/terraform-all-in-one.git;
-$ cd terraform-all-one;
+$ git clone git@github.com:1ambda/terraform-all-in-one.git
+$ cd terraform-all-one
 
 # Remove .gitigonre to index generated files
 rm .gitignore
@@ -43,6 +50,8 @@ $ COMPANY=github PROJECT=1ambda EMAIL=1ambda@github.com ./create-ssh-key.sh
 - [variable.customize.tf](https://github.com/1ambda/terraform-all-in-one/blob/master/root-infra/variable.customize.tf)
 - [variable.resource.tf](https://github.com/1ambda/terraform-all-in-one/blob/master/root-infra/variable.resource.tf)
 
+[company](https://github.com/1ambda/terraform-all-in-one/blob/master/root-infra/variable.customize.tf#L8) and [project](https://github.com/1ambda/terraform-all-in-one/blob/master/root-infra/variable.customize.tf#L13) variable should match with values used for the generated ssh key.
+
 ### 4. Applying Terraform Modules
 
 - [x] **root-infra**: Create VPC, Bastion, ECS, Stroages and build kops scripts
@@ -56,7 +65,7 @@ $ COMPANY=github PROJECT=1ambda EMAIL=1ambda@github.com ./create-ssh-key.sh
     # provision non-managed stroages using ansible
     ../script-provision/generated.provision-zookeeper.sh
     ```
-    
+
 - [x] **root-kubernetes**: [Build Kubernetes Cluster](https://github.com/1ambda/terraform-all-in-one/tree/master/root-kubernetes#1-creating-cluster) and [install add-ons](https://github.com/1ambda/terraform-all-in-one/tree/master/root-kubernetes#2-deploying-add-ons)
     ```bash
     cd root-kubernetes;
@@ -74,6 +83,7 @@ $ COMPANY=github PROJECT=1ambda EMAIL=1ambda@github.com ./create-ssh-key.sh
     kops export kubecfg --name=$NAME
     ./generated.correct-kubectl-context.sh
 
+    # wait for 3-5 mins until kubernetes cluster is ready
     kops validate cluster
     kubectl get pods
     ```
@@ -109,8 +119,8 @@ $ COMPANY=github PROJECT=1ambda EMAIL=1ambda@github.com ./create-ssh-key.sh
     * [Dynamic Cloudwatch Alarm Registration for ASG Event](https://github.com/1ambda/terraform-all-in-one/blob/master/root-kubernetes/kubernetes-monitoring-cloudwatch-alarm.tf#L133-L146)
     * [Cloudwatch Custom Metrics](https://github.com/1ambda/terraform-all-in-one/blob/master/root-infra/module-kops/template.kops-manifest.yaml#L80-L94) + [Alerts for EC2: Memory, Disk Space](https://github.com/1ambda/terraform-all-in-one/blob/master/root-kubernetes/kubernetes-monitoring-cloudwatch-alarm.tf)
     * [add-on: Nginx Ingerss Chart with AWS ACM](https://github.com/1ambda/terraform-all-in-one/tree/master/root-kubernetes#21-acm--nginx-ingress)
-    * [add-on: Kubernetes Dashboard](https://github.com/1ambda/terraform-all-in-one/tree/master/root-kubernetes#22-optional-kubernetes-dashboard)
-    * [add-on: Elasticsearch, Kibana, Fluentd](https://github.com/1ambda/terraform-all-in-one/tree/master/root-kubernetes#23-optional-ekf--es-curator)
+    * [add-on: Kubernetes Dashboard](https://github.com/1ambda/terraform-all-in-one/tree/master/root-kubernetes#21-acm--nginx-ingress)
+    * [add-on: Elasticsearch, Kibana, Fluentd](https://github.com/1ambda/terraform-all-in-one/tree/master/root-kubernetes#23-ekf--es-curator)
 
 ## Credits
 

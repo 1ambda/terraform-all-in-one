@@ -167,8 +167,8 @@ resource "aws_db_instance" "rds_mariadb" {
   enabled_cloudwatch_logs_exports = [
     // "audit",
     // "general",
-    "error",
-    "slowquery",
+    // "error",
+    // "slowquery",
   ]
 
   lifecycle {

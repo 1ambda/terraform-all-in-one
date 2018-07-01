@@ -6,13 +6,13 @@ variable "on_testing" {
 
 # META
 variable "company" {
-  # company name
-  default = "GITHUB"
+  # THIS LINE IS REPLACE by `create-ssh-key.sh`
+  default = "github" # company
 }
 
 variable "project" {
-  # project name
-  default = "1AMBDA"
+  # THIS LINE IS REPLACE by `create-ssh-key.sh`
+  default = "1ambda" # project
 }
 
 variable "environment" {

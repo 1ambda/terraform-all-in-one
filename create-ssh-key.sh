@@ -28,3 +28,15 @@ mv key.${project}.${company}.io_rsa.pub ~/.ssh/
 echo -e ""
 echo -e "${TAG} Listing SSH Key Pair under '~/.ssh/'"
 ls ~/.ssh | grep key.${project}.${company}.io_rsa
+
+echo -e ""
+echo -e "${TAG} Replace 'company' and 'project' variable.customize.tf"
+sed -i.bak "s/  default = \"[a-zA-Z0-9_]*\" # company/  default = \"${company}\" # company/" root-infra/variable.customize.tf
+sed -i.bak "s/  default = \"[a-zA-Z0-9_]*\" # project/  default = \"${project}\" # project/" root-infra/variable.customize.tf
+rm -rf root-infra/variable.customize.tf.bak
+cat root-infra/variable.customize.tf | grep "# company"
+cat root-infra/variable.customize.tf | grep "# project"
+
+
+
+
