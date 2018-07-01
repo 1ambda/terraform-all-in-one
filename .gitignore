@@ -1,25 +1,7 @@
-root-infra/.terraform*
-root-infra/scripts/generated.*
-root-infra/scripts/inventory.*
-root-infra/module-bastion/key.*
-root-infra/module-storage-baremetal/provision/playbook.*
-root-infra/module-storage-baremetal/provision/ssh.*
-root-infra/module-storage-baremetal/provision/generated.*
-root-infra/module-storage-baremetal/provision/inventory.*
-root-infra/module-kops/generated.*
+# root-infra
 
-root-kubernetes/data/
-root-kubernetes/kubernetes.tf
-root-kubernetes/generated.*.tf
-root-kubernetes/generated.*.sh
-root-kubernetes/generated.*.yaml
-root-kubernetes/addon-ingress/generated.*.sh
-root-kubernetes/module-ZEPL/generated.*
-
-generated.infra-config.yaml
-generated.kubernetes-config.yaml
-
-.terraform/
+# terraform
+.terraform
 terraform.tfstate
 terraform.tfstate.backup
 

@@ -7,7 +7,7 @@ import re
 import boto3
 from botocore.vendored import requests
 
-meta_enterprise = os.environ['META_ENTERPRISE']
+meta_company = os.environ['META_COMPANY']
 meta_project = os.environ['META_PROJECT']
 env = os.environ['ENV']
 
@@ -191,7 +191,7 @@ def create_cloudwatch_client():
 
 def create_cloudwatch_alarm_name(asg_name, instance_id, postfix):
     abbr_asg_name = asg_name.replace("-", "").replace("_", "")
-    alarm_name = "{}/{}-{}/{}_{}".format(meta_enterprise,
+    alarm_name = "{}/{}-{}/{}_{}".format(meta_company,
                                          meta_project,
                                          abbr_asg_name,
                                          instance_id,
