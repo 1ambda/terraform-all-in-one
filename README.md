@@ -1,6 +1,6 @@
 # terraform-all-in-one
 
-Provide fine-grained Kubernetes + Infrastructure Terraform files for AWS in 30 mins 🚀
+Get fine-grained Kubernetes + Infrastructure on AWS in 30 mins 🚀
 
 - [Prerequisite](#prerequisite)
 - [Usage](#usage)
