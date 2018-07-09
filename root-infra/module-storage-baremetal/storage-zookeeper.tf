@@ -50,13 +50,10 @@ data "template_cloudinit_config" "zookeeper_user_data" {
   gzip = false
   base64_encode = true
 
-  # apply amazon linux patces
+  # install awslogs and setup
   part {
     content_type = "text/x-shellscript"
-    content = <<EOF
-#!/bin/bash
-yum update -y
-EOF
+    content = "${data.template_file.zookeeper_userdata_awslogs.rendered}"
   }
 
   # install agent for cloudwatch custom metric
@@ -65,10 +62,14 @@ EOF
     content = "${data.template_file.zookeeper_userdata_install_cloudwatch_custom_metric_agent.rendered}"
   }
 
-  # install awslogs and setup
+  # apply amazon linux patces
   part {
     content_type = "text/x-shellscript"
-    content = "${data.template_file.zookeeper_userdata_awslogs.rendered}"
+    content = <<EOF
+#!/bin/bash
+yum update -y
+
+EOF
   }
 }
 

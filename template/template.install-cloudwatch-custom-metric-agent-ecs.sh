@@ -1,6 +1,7 @@
 #!/bin/bash
 cd /root
 ${installer} install -y perl-Switch perl-DateTime perl-Sys-Syslog perl-LWP-Protocol-https perl-Digest-SHA curl zip unzip
+
 curl -L https://github.com/alexanderbh/ExtendedCloudWatchScripts/archive/${agent_version}.tar.gz -O
 tar -zxvf ${agent_version}.tar.gz
 mv ExtendedCloudWatchScripts-${agent_version} ExtendedCloudWatchScripts

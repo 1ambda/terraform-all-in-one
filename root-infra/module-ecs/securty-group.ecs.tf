@@ -23,7 +23,7 @@ output "ecs_security_group_id" {
   value = "${aws_security_group.ecs.id}"
 }
 
-resource "aws_security_group_rule" "storage-baremetal_allow_ecs_from_bastion" {
+resource "aws_security_group_rule" "ecs_allow_ssh_from_bastion" {
   type            = "ingress"
   from_port       = 22
   to_port         = 22
@@ -33,7 +33,7 @@ resource "aws_security_group_rule" "storage-baremetal_allow_ecs_from_bastion" {
   security_group_id = "${aws_security_group.ecs.id}"
 }
 
-resource "aws_security_group_rule" "storage_allow_to_all" {
+resource "aws_security_group_rule" "ecs_allow_to_all" {
   type            = "egress"
   from_port       = 0
   to_port         = 0
@@ -43,7 +43,7 @@ resource "aws_security_group_rule" "storage_allow_to_all" {
   security_group_id = "${aws_security_group.ecs.id}"
 }
 
-resource "aws_security_group_rule" "storage_allow_all_from_self" {
+resource "aws_security_group_rule" "ecs_allow_all_from_self" {
   type            = "ingress"
   from_port       = 0
   to_port         = 0
