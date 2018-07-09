@@ -11,6 +11,7 @@ variable "ecs_task_cleanup_duration" {}
 variable "ecs_image_minimum_cleanup_age" {}
 
 locals {
+  cloudwatch_log_group_prefix = "ecs.${lower(var.project)}.${lower(var.company)}"
   instance_name = "ecs.${lower(var.project)}.${lower(var.company)}.io"
   asg_tf_resource_name = "ASG-${var.company}-${var.project}_ECS"
   cluster_name = "${var.company}-${var.project}_ECS"

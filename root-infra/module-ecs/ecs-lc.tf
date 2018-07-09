@@ -22,7 +22,7 @@ data "template_file" "ecs_awslogs_template" {
   template = "${file("${path.root}/../template/template.ecs-awslogs-template.sh")}"
 
   vars {
-    awslogs_stream_prefix = "${local.instance_name}"
+    cloudwatch_log_group_prefix = "${local.cloudwatch_log_group_prefix}"
   }
 }
 
@@ -30,7 +30,7 @@ data "template_file" "ecs_awslogs_update_region" {
   template = "${file("${path.root}/../template/template.ecs-awslogs-update-region.sh")}"
 
   vars {
-    awslogs_stream_prefix = "${local.instance_name}"
+    cloudwatch_log_group_prefix = "${local.cloudwatch_log_group_prefix}"
     region = "${var.region}"
   }
 }

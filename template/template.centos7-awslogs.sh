@@ -17,12 +17,12 @@ state_file = /var/lib/awslogs/agent-state
 
 [/${storage_log_path}]
 file = /${storage_log_path}
-log_group_name = /${awslogs_stream_prefix}/${storage_log_path}
+log_group_name = /${cloudwatch_log_group_prefix}/${storage_log_path}
 log_stream_name = $${private_ip}
 
 [/var/log/messages]
 file = /var/log/messages
-log_group_name = /${awslogs_stream_prefix}/var/log/messages
+log_group_name = /${cloudwatch_log_group_prefix}/var/log/messages
 log_stream_name = $${private_ip}
 datetime_format = %b %d %H:%M:%S
 EOF
