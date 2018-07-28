@@ -1,4 +1,4 @@
 	(storage-baremetal)
-zookeeper-03		10.0.11.250
-zookeeper-01		10.0.11.139
-zookeeper-02		10.0.12.162
+zookeeper-02		10.0.12.183
+zookeeper-01		10.0.11.118
+zookeeper-03		10.0.11.252

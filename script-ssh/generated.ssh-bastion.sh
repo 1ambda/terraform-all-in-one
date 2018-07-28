@@ -73,5 +73,5 @@ fi
 
 echo -e "${TAG} Connecting to bastion..."
 eval "$(ssh-agent -s)"; ssh-add -K ~/.ssh/key.1ambda.github.io_rsa
-ssh -A ec2-user@13.125.193.98
+ssh -A ec2-user@13.125.9.147
 
